@@ -8,7 +8,7 @@
   <img align="center" alt="joao-React" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original.svg">
   <img align="center" alt="joao-HTML" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original.svg">
   <img align="center" alt="joao-CSS" height="30" width="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original.svg">
-  <img align="right" alt="joao-yoda" height="135" width="155" src="https://c.tenor.com/0CnM-GDoBhsAAAAd/baby-yoda-yoda.gif">
+  <img align="right" alt="joao-yoda" height="110" width="130" src="https://c.tenor.com/0CnM-GDoBhsAAAAd/baby-yoda-yoda.gif">
 </div>
   
   ##
