@@ -1,4 +1,3 @@
-<h2>Welcome!</h2>
 <div style="display: inline-block>
   <a href="https://github.com/jfeijo">
   <img height="180em" src="https://github-readme-stats.vercel.app/api?username=jfeijo&show_icons=true&theme=highcontrast&include_all_commits=true&count_private=true"/>
