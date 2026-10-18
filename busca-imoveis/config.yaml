@@ -1,0 +1,150 @@
+# Critérios da busca. Edite à vontade — o programa lê tudo daqui.
+
+orcamento:
+  # Aluguel + condomínio (IPTU não entra na conta, mas aparece no relatório).
+  maximo: 3500
+  # Em Porto Alegre, um apto com nota muito alta pode passar do teto até este valor.
+  teto_flexivel_poa: 4200
+  nota_minima_para_flexibilizar: 75
+
+# Ponto de referência: Av. Soledade (Petrópolis). Coordenadas aproximadas — ajuste se quiser.
+referencia:
+  nome: Av. Soledade
+  lat: -30.0372
+  lon: -51.1866
+
+cidades:
+  porto_alegre:
+    nome: Porto Alegre
+    estado: RS
+    tipos: [apartamento, cobertura, casa_condominio]
+    area_minima: 89
+    # Peso do bairro (0–100). Bairros fora desta lista são descartados.
+    bairros:
+      Petrópolis: 100
+      Bela Vista: 85
+      Mont'Serrat: 85
+      Boa Vista: 85
+      Chácara das Pedras: 80
+      Três Figueiras: 80
+      Rio Branco: 75
+      Auxiliadora: 75
+      Higienópolis: 75
+      Moinhos de Vento: 70
+      Jardim Botânico: 65
+      Passo d'Areia: 55
+      Cristo Redentor: 50
+      Vila Ipiranga: 50
+      Jardim Europa: 50
+      Santa Cecília: 50
+    # Ficam de fora mesmo se o anúncio tiver o nome escrito de outro jeito.
+    bairros_excluidos:
+      - Bom Jesus
+      - Vila Jardim
+      - Jardim Carvalho
+      - Partenon
+      - Morro Santana
+      - Mário Quintana
+      - São José
+      - Santa Tereza
+      - Rubem Berta
+      - Sarandi
+      - Farrapos
+      - Humaitá
+      - Restinga
+      - Lomba do Pinheiro
+
+  nova_petropolis:
+    nome: Nova Petrópolis
+    estado: RS
+    # Casa ou sobrado com 89 m²+; apartamento só se for amplo.
+    tipos: [casa, sobrado, casa_condominio, apartamento]
+    area_minima: 89
+    area_minima_apartamento: 120
+    bairros:
+      Pousada da Neve: 100
+      Centro: 95
+      Bavária: 80
+      Vila Olinda: 75
+      Logradouro: 70
+      Vila Juriti: 70
+      Piá: 60
+      São José: 60
+    bairros_excluidos: []
+
+# Palavras procuradas no título, descrição e lista de comodidades do anúncio.
+palavras:
+  seguranca:
+    - portaria 24
+    - portaria 24h
+    - porteiro
+    - zelador
+    - guarita
+    - vigilancia
+    - seguranca 24
+    - cameras
+    - cftv
+    - cerca eletrica
+    - concierge_24h
+    - security_24_hours
+    - gated_community
+    - condominio fechado
+    - controle de acesso
+  bom_estado:
+    - reformado
+    - recem reformado
+    - totalmente reformado
+    - novo
+    - semi novo
+    - seminovo
+    - impecavel
+    - excelente estado
+    - otimo estado
+    - porcelanato
+    - piso laminado
+    - sacada gourmet
+    - churrasqueira na sacada
+    - nunca habitado
+    - pronto para morar
+    - moveis planejados
+  mau_estado:
+    - precisa de reforma
+    - necessita reforma
+    - para reformar
+    - no estado
+    - antigo
+    - infiltracao
+    - umidade
+    - sem elevador
+  area_verde:
+    - area verde
+    - jardim
+    - bosque
+    - praca interna
+    - garden
+    - patio
+    - parque
+  academia:
+    - academia
+    - fitness
+    - gym
+  lazer:
+    - piscina
+    - pool
+    - salao de festas
+    - party_hall
+    - playground
+    - churrasqueira
+    - barbecue_grill
+    - espaco gourmet
+    - brinquedoteca
+    - quadra
+    - sports_court
+    - sauna
+    - salao de jogos
+    - game_room
+
+# Quantas páginas buscar em cada fonte por bairro (cada página ~ 30 anúncios).
+paginas_por_busca: 3
+# Pausa entre requisições, em segundos (evita bloqueio dos portais).
+pausa_segundos: 2.5
