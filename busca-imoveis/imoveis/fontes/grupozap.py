@@ -1,7 +1,7 @@
 """ZAP Imóveis e VivaReal (mesmo grupo, mesma API pública usada pelos sites)."""
 from __future__ import annotations
 
-from ..modelo import Imovel
+from ..modelo import Imovel, normalizar
 from .base import Fonte, FonteIndisponivel, inteiro, numero
 
 TIPOS = {
@@ -24,6 +24,18 @@ CAMPOS = (
     "search(result(listings(listing(id,title,description,usableAreas,totalAreas,bedrooms,bathrooms,"
     "parkingSpaces,unitTypes,pricingInfos,address,amenities,updatedAt),link,medias)),totalCount)"
 )
+
+
+def aceita_pet(amenidades: list, descricao: str) -> bool | None:
+    """True se o anúncio diz que aceita pet; None quando não informa."""
+    if "PETS_ALLOWED" in amenidades:
+        return True
+    texto = normalizar(descricao)
+    if any(t in texto for t in ("nao aceita pet", "nao aceita animais", "proibido animais")):
+        return False
+    if any(t in texto for t in ("aceita pet", "aceita animais", "pet friendly", "permite pet", "permite animais")):
+        return True
+    return None
 
 
 class GrupoZap(Fonte):
@@ -88,6 +100,7 @@ class GrupoZap(Fonte):
         url = href if href.startswith("http") else f"https://{self.dominio}{href}"
         tipo = TIPOS.get((l.get("unitTypes") or [""])[0], "apartamento")
         iptu = numero(preco.get("yearlyIptu"))
+        amenidades = list(l.get("amenities") or [])
         return Imovel(
             fonte=self.nome,
             url=url,
@@ -104,12 +117,13 @@ class GrupoZap(Fonte):
             aluguel=numero(preco.get("price")),
             condominio=numero(preco.get("monthlyCondoFee")),
             iptu_mensal=round(iptu / 12, 2) if iptu else None,
-            comodidades=list(l.get("amenities") or []),
+            comodidades=amenidades,
             lat=ponto.get("lat"),
             lon=ponto.get("lon"),
             fotos=[m.get("url", "").replace("{action}", "fit-in").replace("{width}", "640").replace("{height}", "480")
                    for m in (item.get("medias") or [])[:3]],
             id_fonte=str(l.get("id", "")),
+            pet=aceita_pet(amenidades, l.get("description", "")),
         )
 
 
