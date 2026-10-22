@@ -38,6 +38,7 @@ class Banco:
             "alertas": resultado.alertas,
             "motivos": resultado.motivos_reprovacao,
             "distancia_km": resultado.distancia_km,
+            "quadras": resultado.quadras,
             "acima_do_teto": resultado.acima_do_teto,
         }, ensure_ascii=False)
         existe = self.con.execute("SELECT 1 FROM imoveis WHERE chave=?", (im.chave,)).fetchone()

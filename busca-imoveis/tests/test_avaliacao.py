@@ -16,7 +16,7 @@ POA = CONFIG["cidades"]["porto_alegre"]
 
 def apto(**kw):
     base = dict(fonte="t", url="https://x/1", cidade="Porto Alegre", bairro="Petrópolis", tipo="apartamento",
-                area=95, quartos=3, vagas=1, aluguel=2600, condominio=700, lat=-30.038, lon=-51.187,
+                area=95, quartos=3, vagas=1, aluguel=3200, condominio=700, lat=-30.0360, lon=-51.1815, pet=True,
                 descricao="Reformado, portaria 24h, academia, piscina e jardim")
     base.update(kw)
     return Imovel(**base)
@@ -32,29 +32,31 @@ def test_numero():
 
 def test_bairro_variacoes():
     assert peso_bairro(POA, "PETROPOLIS")[0] == 100
-    assert peso_bairro(POA, "Montserrat")[0] == 85
+    assert peso_bairro(POA, "Mont’serrat")[0] == 90
     assert peso_bairro(POA, "Bom Jesus") == (None, True)
-    assert peso_bairro(POA, "Restinga")[1] is True
+    assert peso_bairro(POA, "São João")[1] is True  # enchente 2024
 
 
-def test_apto_ideal_aprovado_com_nota_alta():
+def test_apto_ideal():
     r = avaliar(apto(), CONFIG)
     assert r.aprovado, r.motivos_reprovacao
-    assert r.nota >= 75
-    assert "academia" in r.destaques and "segurança" in r.destaques
+    assert r.nota >= 75 and r.quadras <= 2
+    assert "aceita pet" in r.destaques and "3 quartos" in r.destaques
 
 
-def test_reprova_area_pequena_e_bairro_excluido():
-    assert not avaliar(apto(area=70), CONFIG).aprovado
-    assert not avaliar(apto(bairro="Bom Jesus"), CONFIG).aprovado
-    assert not avaliar(apto(bairro="Centro Histórico"), CONFIG).aprovado
+def test_requisitos_obrigatorios():
+    assert not avaliar(apto(area=75), CONFIG).aprovado
+    assert not avaliar(apto(quartos=1), CONFIG).aprovado
+    assert not avaliar(apto(vagas=0), CONFIG).aprovado
+    assert not avaliar(apto(bairro="Menino Deus"), CONFIG).aprovado
+    assert avaliar(apto(quartos=2, pet=None), CONFIG).aprovado  # pet é bônus, não obrigatório
 
 
-def test_flexibiliza_poa_so_se_for_muito_bom():
-    assert avaliar(apto(aluguel=3200, condominio=700), CONFIG).aprovado  # 3900, ótimo
-    ruim = apto(aluguel=3200, condominio=700, descricao="precisa de reforma", bairro="Cristo Redentor", lat=None, lon=None)
-    assert not avaliar(ruim, CONFIG).aprovado
-    assert not avaliar(apto(aluguel=4000, condominio=700), CONFIG).aprovado  # 4700 > teto flexível
+def test_orcamento():
+    assert not avaliar(apto(aluguel=3300), CONFIG).acima_do_teto          # 4.000
+    r = avaliar(apto(aluguel=3500), CONFIG)                               # 4.200: estoura a margem
+    assert r.aprovado and r.acima_do_teto
+    assert not avaliar(apto(aluguel=3700), CONFIG).aprovado               # 4.400
 
 
 def test_nova_petropolis():
@@ -62,14 +64,8 @@ def test_nova_petropolis():
                   area=130, quartos=3, aluguel=2900, descricao="casa com jardim e churrasqueira")
     assert avaliar(casa, CONFIG).aprovado
     apto_pequeno = Imovel(fonte="t", url="u", cidade="Nova Petrópolis", bairro="Centro", tipo="apartamento",
-                          area=95, aluguel=2500, condominio=300)
-    assert not avaliar(apto_pequeno, CONFIG).aprovado  # apto precisa ser amplo
-    apto_amplo = Imovel(fonte="t", url="u", cidade="Nova Petrópolis", bairro="Centro", tipo="apartamento",
-                        area=140, aluguel=2800, condominio=400)
-    assert avaliar(apto_amplo, CONFIG).aprovado
-    caro = Imovel(fonte="t", url="u", cidade="Nova Petrópolis", bairro="Centro", tipo="casa", area=150,
-                  aluguel=3700, descricao="reformado portaria 24h academia piscina jardim")
-    assert not avaliar(caro, CONFIG).aprovado  # flexibilidade só vale em POA
+                          area=95, quartos=2, aluguel=2500, condominio=300)
+    assert not avaliar(apto_pequeno, CONFIG).aprovado
 
 
 def test_extrator_nextjs():

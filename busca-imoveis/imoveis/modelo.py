@@ -51,6 +51,8 @@ class Imovel:
     lon: float | None = None
     fotos: list[str] = field(default_factory=list)
     id_fonte: str = ""
+    pet: bool | None = None              # True = aceita; None = não informado
+    condominio_inclui_iptu: bool = False  # QuintoAndar soma condomínio + IPTU
 
     @property
     def total(self) -> float | None:
