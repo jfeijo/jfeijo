@@ -31,9 +31,9 @@ def _foto(url: str, cache: Path) -> str | None:
             dados = r.content
             if Image:
                 im = Image.open(io.BytesIO(dados)).convert("RGB")
-                im.thumbnail((640, 640))
+                im.thumbnail((560, 560))
                 buf = io.BytesIO()
-                im.save(buf, "JPEG", quality=66, optimize=True, progressive=True)
+                im.save(buf, "JPEG", quality=60, optimize=True, progressive=True)
                 dados = buf.getvalue()
             arq.write_bytes(dados)
         except Exception:  # noqa: BLE001
@@ -41,7 +41,7 @@ def _foto(url: str, cache: Path) -> str | None:
     return "data:image/jpeg;base64," + base64.b64encode(arq.read_bytes()).decode()
 
 
-def montar_dados(linhas: list[dict], config: dict, cache: Path, fotos_por_imovel: int = 4) -> list[dict]:
+def montar_dados(linhas: list[dict], config: dict, cache: Path, fotos_por_imovel: int = 3) -> list[dict]:
     saida = []
     for l in linhas:
         d, a = l["dados"], l["avaliacao"]

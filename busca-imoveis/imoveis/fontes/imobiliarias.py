@@ -208,12 +208,14 @@ class Auxiliadora(Fonte):
 
     @staticmethod
     def _ld(texto: str) -> list[dict]:
-        itens = []
-        for m in re.finditer(r'\{"@context":"https://schema.org".*?(?=\n[0-9a-f]+:|\Z)', texto, re.S):
+        itens, dec, pos = [], json.JSONDecoder(), 0
+        while (i := texto.find('{"@context":"https://schema.org"', pos)) >= 0:
             try:
-                g = json.loads(m.group(0))
+                g, fim = dec.raw_decode(texto[i:])
             except ValueError:
+                pos = i + 1
                 continue
+            pos = i + fim
             itens += [x for x in g.get("@graph", [g]) if x.get("@type") == "RealEstateListing"]
         return itens
 
@@ -236,13 +238,13 @@ class Auxiliadora(Fonte):
                               if "Vaga" in a.get("name", "")), 0) or 0
                 if (area and area < f["area"]) or vagas < f["vagas"] or (of.get("price") or 0) > f["teto"]:
                     continue
-                im = self._detalhe(it["url"], cidade_cfg["nome"], bairro)
+                im = self._detalhe(it["url"], cidade_cfg["nome"], bairro, acc)
                 if im:
                     yield im
             if novos == 0:
                 break
 
-    def _detalhe(self, url: str, cidade: str, bairro: str) -> Imovel | None:
+    def _detalhe(self, url: str, cidade: str, bairro: str, base: dict | None = None) -> Imovel | None:
         try:
             t = self._rsc(self.get(url).text)
         except FonteIndisponivel:
@@ -251,7 +253,7 @@ class Auxiliadora(Fonte):
         if not it:
             return None
         of = (it.get("offers") or [{}])[0]
-        acc = of.get("itemOffered") or {}
+        acc = {**(of.get("itemOffered") or {}), **(base or {})}  # lista tem quartos, área e geo confiáveis
         precos = {p.get("name"): p.get("price") for p in (of.get("priceSpecification") or [])}
         if not precos:
             for m in re.finditer(r'"price":(\d+(?:\.\d+)?),"priceCurrency":"BRL","name":"([^"]+)"', t):
@@ -261,7 +263,8 @@ class Auxiliadora(Fonte):
         cond = re.findall(r'"caracteristica(?:Condominio|Imovel)":\[(.*?)\]', t)
         amen = re.findall(r'"nome":"([^"]+)"', " ".join(cond))
         desc = re.search(r'"descricao":"(.*?)","', t)
-        imgs = re.findall(r'https://gestor\.auxiliadorapredial\.com\.br/rest/image/[^"\\ ]+\.(?:jpe?g|png|webp)', t)
+        imgs = [x.get("contentUrl") for x in it.get("image", []) if isinstance(x, dict)] if isinstance(it.get("image"), list) else []
+        imgs += re.findall(r'https://gestor\.auxiliadorapredial\.com\.br/rest/image/[^"\\ ]+\.(?:jpe?g|png|webp)', t)
         vagas = next((inteiro(a.get("value")) for a in acc.get("amenityFeature", []) if "Vaga" in a.get("name", "")),
                      inteiro(extras.get("Vagas de Garagem"))) or 0
         texto_pet = normalizar(" ".join(amen) + " " + (desc.group(1) if desc else ""))
@@ -270,7 +273,7 @@ class Auxiliadora(Fonte):
             endereco=(acc.get("address") or {}).get("streetAddress", ""),
             tipo="apartamento" if "partamento" in acc.get("accommodationCategory", "Apartamento") else "casa",
             titulo=it.get("name", ""), descricao=desc.group(1) if desc else "",
-            area=numero((acc.get("floorSize") or {}).get("value")), quartos=inteiro(acc.get("numberOfBedrooms")),
+            area=numero((acc.get("floorSize") or {}).get("value")), quartos=inteiro(acc.get("numberOfBedrooms")) or inteiro(re.search(r"(\d+) quartos?", t).group(1) if re.search(r"(\d+) quartos?", t) else None),
             banheiros=inteiro(acc.get("numberOfBathroomsTotal")), vagas=vagas,
             aluguel=numero(precos.get("Aluguel") or of.get("price")), condominio=numero(precos.get("Condomínio")),
             iptu_mensal=numero(precos.get("IPTU")), comodidades=amen,
