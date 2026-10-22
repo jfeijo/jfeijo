@@ -1,0 +1,115 @@
+# Critérios da busca. Edite à vontade — o programa lê tudo daqui.
+
+orcamento:
+  # Aluguel + condomínio (IPTU não entra na conta, mas aparece no relatório).
+  maximo: 4100
+  # Até aqui ainda entra, marcado como "estoura a margem".
+  teto_flexivel_poa: 4300
+  nota_minima_para_flexibilizar: 0
+
+# Casa da Yoshi e da Maria, na Av. Soledade (Petrópolis). Distância em quadras (~110 m cada).
+referencia:
+  nome: Yoshi e Maria (Av. Soledade)
+  lat: -30.0352
+  lon: -51.1808
+  metros_por_quadra: 110
+
+# Raio do retângulo de busca em volta da referência (0.025° ≈ 2,8 km).
+raio_busca_graus: 0.028
+
+cidades:
+  porto_alegre:
+    nome: Porto Alegre
+    estado: RS
+    tipos: [apartamento, cobertura, casa, sobrado, casa_condominio]
+    area_minima: 80
+    quartos_minimo: 2
+    vagas_minimo: 1
+    # Peso do bairro (0–100). Fora desta lista = descartado.
+    # Todos ficam em área alta: nenhum foi atingido pela enchente de maio/2024.
+    bairros:
+      Petrópolis: 100
+      Bela Vista: 90
+      Mont'Serrat: 90
+      Boa Vista: 85
+      Chácara das Pedras: 85
+      Três Figueiras: 80
+      Rio Branco: 80
+      Auxiliadora: 80
+      Higienópolis: 75
+      Jardim Botânico: 75
+      Moinhos de Vento: 70
+      Central Park: 65
+      Santa Cecília: 65
+      Jardim Europa: 60
+      Passo d'Areia: 55
+      Passo da Areia: 55
+      Bom Fim: 50
+      Vila Ipiranga: 50
+      Cristo Redentor: 50
+      Santana: 45
+      Alto Petrópolis: 45
+    bairros_excluidos:
+      # atingidos pela enchente de 2024
+      - São João
+      - São Geraldo
+      - Floresta
+      - Navegantes
+      - Humaitá
+      - Farrapos
+      - Anchieta
+      - Centro Histórico
+      - Cidade Baixa
+      - Menino Deus
+      - Praia de Belas
+      - Sarandi
+      - Marcílio Dias
+      - Cristal
+      - Santa Maria Goretti
+      # evitar
+      - Bom Jesus
+      - Vila Jardim
+      - Jardim Carvalho
+      - Jardim do Salso
+      - Partenon
+      - Morro Santana
+      - Mário Quintana
+      - São José
+      - Santa Tereza
+      - Rubem Berta
+      - Restinga
+      - Lomba do Pinheiro
+
+  nova_petropolis:
+    nome: Nova Petrópolis
+    estado: RS
+    tipos: [casa, sobrado, casa_condominio, apartamento]
+    area_minima: 89
+    area_minima_apartamento: 120
+    quartos_minimo: 2
+    vagas_minimo: 0
+    bairros:
+      Pousada da Neve: 100
+      Centro: 95
+      Bavária: 80
+      Vila Olinda: 75
+      Logradouro: 70
+      Vila Juriti: 70
+      Piá: 60
+      São José: 60
+    bairros_excluidos: []
+
+palavras:
+  seguranca: [portaria 24, portaria 24h, portaria, porteiro, zelador, guarita, vigilancia, cameras, cftv,
+              cerca eletrica, concierge_24h, security_24_hours, condominio fechado, controle de acesso]
+  bom_estado: [reformado, recem reformado, totalmente reformado, novo, semi novo, seminovo, impecavel,
+               excelente estado, otimo estado, porcelanato, sacada gourmet, churrasqueira na sacada,
+               nunca habitado, pronto para morar, moveis planejados]
+  mau_estado: [precisa de reforma, necessita reforma, para reformar, no estado, infiltracao, umidade]
+  area_verde: [area verde, jardim, bosque, praca interna, garden, patio, parque]
+  academia: [academia, fitness, gym, sala fitness]
+  lazer: [piscina, pool, salao de festas, salao festas, party_hall, playground, churrasqueira, espaco gourmet,
+          brinquedoteca, quadra, sauna, salao de jogos, piscina aquecida, area de lazer]
+
+paginas_por_busca: 4
+pausa_segundos: 1.2

@@ -1,0 +1,7 @@
+imoveis.db
+relatorio.html
+__pycache__/
+.pytest_cache/
+.venv/
+.cache_fotos/
+vitrine.html

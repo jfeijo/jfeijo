@@ -1,0 +1,188 @@
+<title>Apê perto da Soledade</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Familjen+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: uma coluna de fichas (duas no desktop), com mapa de quadras em volta da casa da Yoshi e da Maria no topo. */
+:root{
+  --bg:#f5f4f8; --card:#ffffff; --ink:#1d1a26; --mut:#6b6679; --line:#e3e0ea;
+  --jaca:#6a3fb5; --jaca-soft:#efe8fb; --ok:#1f7a4d; --ok-soft:#e2f3ea; --warn:#9a5b00; --warn-soft:#fbefd9;
+  --ring:#c9bfe0;
+  --f-disp:"Bricolage Grotesque", "Familjen Grotesk", system-ui, sans-serif;
+  --f-body:"Familjen Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-num:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14121a; --card:#1e1b27; --ink:#efecf5; --mut:#a49eb3; --line:#2f2b3b;
+  --jaca:#b597ef; --jaca-soft:#2c2342; --ok:#7fd3a6; --ok-soft:#183126; --warn:#f0c071; --warn-soft:#3a2c14; --ring:#4a4060; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14121a; --card:#1e1b27; --ink:#efecf5; --mut:#a49eb3; --line:#2f2b3b;
+  --jaca:#b597ef; --jaca-soft:#2c2342; --ok:#7fd3a6; --ok-soft:#183126; --warn:#f0c071; --warn-soft:#3a2c14; --ring:#4a4060; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 var(--f-body)}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px;display:grid;gap:18px}
+h1{font:800 clamp(28px,7vw,44px)/1.02 var(--f-disp);letter-spacing:-.02em;margin:0;text-wrap:balance}
+.sub{color:var(--mut);margin:6px 0 0;max-width:62ch}
+.resumo{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--mut)}
+.resumo b{color:var(--ink);font-family:var(--f-num);font-weight:500}
+.mapa{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px}
+.mapa svg{width:100%;height:auto;display:block;max-height:340px}
+.mapa small{color:var(--mut)}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:500 13px var(--f-body);border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:7px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--jaca);border-color:var(--jaca);color:var(--card)}
+.chip:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--jaca);outline-offset:2px}
+select{font:500 13px var(--f-body);padding:7px 10px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--ink);margin-left:auto}
+.lista{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
+.ficha{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:grid;scroll-margin-top:12px}
+.ficha.alvo{box-shadow:0 0 0 3px var(--jaca)}
+.fotos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;aspect-ratio:4/3;max-width:100%;background:var(--line);position:relative}
+.fotos img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.sem-foto{flex:1;display:grid;place-items:center;color:var(--mut);font-size:13px}
+.foto-box{position:relative}
+.foto-box .badge{position:absolute;left:10px;top:10px}
+.corpo{padding:14px 16px 16px;display:grid;gap:10px;min-width:0}
+.linha1{display:flex;gap:10px;align-items:baseline;justify-content:space-between;flex-wrap:wrap}
+.bairro{font:600 18px/1.2 var(--f-disp);margin:0}
+.end{color:var(--mut);font-size:13px;margin:2px 0 0}
+.badge{font:500 12px var(--f-num);background:var(--jaca);color:var(--card);border-radius:8px;padding:3px 8px}
+.pill{font:500 12px var(--f-body);border-radius:999px;padding:3px 9px;background:var(--jaca-soft);color:var(--jaca);white-space:nowrap}
+.preco{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.preco .total{font:500 24px var(--f-num);letter-spacing:-.02em}
+.preco .det{color:var(--mut);font-size:12.5px;font-variant-numeric:tabular-nums}
+.st-ok{color:var(--ok)} .st-warn{color:var(--warn)}
+.specs{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:10px}
+.specs div{padding:7px 4px;text-align:center;display:grid;gap:1px}
+.specs div+div{border-left:1px solid var(--line)}
+.specs b{font:500 15px var(--f-num)}
+.specs span{font-size:11px;color:var(--mut);letter-spacing:.04em;text-transform:uppercase}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;border-radius:999px;padding:2px 9px}
+.tag.bom{background:var(--ok-soft);color:var(--ok)} .tag.atn{background:var(--warn-soft);color:var(--warn)}
+.acoes{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:600 13px var(--f-body);text-decoration:none;border-radius:10px;padding:9px 12px;border:1px solid var(--line);color:var(--ink);background:var(--bg)}
+.btn.pri{background:var(--jaca);border-color:var(--jaca);color:var(--card)}
+.vazio{color:var(--mut);text-align:center;padding:30px 0}
+footer{color:var(--mut);font-size:12.5px;max-width:70ch}
+.foto-box .badge.qtd{left:auto;top:auto;right:10px;bottom:10px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Apê perto da Soledade</h1>
+    <p class="sub">Aluguéis em Petrópolis e nos bairros vizinhos que não alagaram em 2024: 80 m² ou mais, 2 quartos ou mais, com vaga. Distância contada em quadras até a casa da Yoshi e da Maria.</p>
+  </header>
+  <div class="resumo" id="resumo"></div>
+  <section class="mapa" aria-label="Mapa de quadras">
+    <svg id="mapa" viewBox="-200 -200 400 400" role="img" aria-label="Posição dos imóveis em volta da casa da Yoshi e da Maria"></svg>
+    <small>Cada ponto é um imóvel; anéis a 5, 10 e 20 quadras da Yoshi e da Maria. Toque num ponto para ir à ficha.</small>
+  </section>
+  <div class="ctrl" role="group" aria-label="Filtros">
+    <button class="chip" id="f-todos" aria-pressed="true" data-f="todos">Todos</button>
+    <button class="chip" id="f-petro" aria-pressed="false" data-f="petro">Petrópolis</button>
+    <button class="chip" id="f-q3" aria-pressed="false" data-f="q3">3 quartos</button>
+    <button class="chip" id="f-pet" aria-pressed="false" data-f="pet">Aceita pet</button>
+    <button class="chip" id="f-teto" aria-pressed="false" data-f="teto">Até R$ 4.100</button>
+    <select id="ordem" aria-label="Ordenar">
+      <option value="nota">Melhor nota</option>
+      <option value="perto">Mais perto</option>
+      <option value="preco">Menor preço</option>
+    </select>
+  </div>
+  <main class="lista" id="lista"></main>
+  <footer id="rodape"></footer>
+</div>
+
+<script>
+const D = /*__DADOS__*/null;
+const brl = v => v == null ? "—" : "R$ " + Math.round(v).toLocaleString("pt-BR");
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fonteNome = {quintoandar:"QuintoAndar", guarida:"Guarida", auxiliadora:"Auxiliadora Predial", zap:"ZAP", vivareal:"VivaReal", olx:"OLX", manual:"anúncio"};
+const isPetro = i => /petr[oó]polis/i.test(i.bairro) && !/alto/i.test(i.bairro);
+let filtro = "todos", ordem = "nota";
+try { ordem = localStorage.getItem("ordem") || "nota"; } catch (e) {}
+$("#ordem").value = ordem;
+
+function xy(i){
+  const r = D.meta.ref, k = Math.cos(r.lat * Math.PI / 180);
+  return [(i.lon - r.lon) * 111320 * k, -(i.lat - r.lat) * 110540];
+}
+function desenhaMapa(itens){
+  const mq = D.meta.ref.mq, svg = $("#mapa");
+  const pts = itens.filter(i => i.lat && i.lon).map(i => [i, ...xy(i)]);
+  const maxm = Math.max(22 * mq, ...pts.map(p => Math.hypot(p[1], p[2]))) * 1.08;
+  const s = 190 / maxm;
+  let h = "";
+  for (const q of [5, 10, 20]) {
+    const r = q * mq * s;
+    h += `<circle cx="0" cy="0" r="${r.toFixed(1)}" fill="none" stroke="var(--ring)" stroke-dasharray="3 4"/>`;
+    h += `<text x="${(r*0.71+3).toFixed(1)}" y="${(-r*0.71-3).toFixed(1)}" font-size="10" fill="var(--mut)" font-family="IBM Plex Mono, monospace">${q} quadras</text>`;
+  }
+  for (const [i, x, y] of pts) {
+    const cor = i.acima ? "var(--warn)" : "var(--jaca)";
+    h += `<a href="#${i.id}" data-id="${i.id}"><circle cx="${(x*s).toFixed(1)}" cy="${(y*s).toFixed(1)}" r="6" fill="${cor}" stroke="var(--card)" stroke-width="1.5"><title>${esc(i.bairro)} · ${brl(i.total)} · ${i.quadras ?? "?"} quadras</title></circle></a>`;
+  }
+  h += `<circle cx="0" cy="0" r="8" fill="var(--ok)" stroke="var(--card)" stroke-width="2"/><text x="11" y="4" font-size="11" font-weight="600" fill="var(--ink)" font-family="Familjen Grotesk, sans-serif">Yoshi e Maria</text>`;
+  svg.innerHTML = h;
+  svg.querySelectorAll("a").forEach(a => a.addEventListener("click", ev => { ev.preventDefault(); irPara(a.dataset.id); }));
+}
+function irPara(id){
+  const el = document.getElementById(id);
+  if (!el) { filtro = "todos"; marcaChips(); render(); return irPara(id); }
+  document.querySelectorAll(".ficha.alvo").forEach(e => e.classList.remove("alvo"));
+  el.classList.add("alvo");
+  el.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start"});
+}
+function ficha(i){
+  const fotos = i.fotos.length
+    ? i.fotos.map((f, n) => `<img src="${f}" alt="Foto ${n+1} de ${esc(i.bairro)}" loading="lazy">`).join("")
+    : `<div class="sem-foto">Sem fotos</div>`;
+  const st = i.total == null ? "" : i.acima ? `<span class="st-warn">estoura a margem</span>` : `<span class="st-ok">dentro do orçamento</span>`;
+  const cond = i.cond_iptu ? `cond. + IPTU ${brl(i.condominio)}` : `cond. ${brl(i.condominio)}${i.iptu ? ` · IPTU ${brl(i.iptu)}` : ""}`;
+  const pet = i.pet === true ? "sim" : i.pet === false ? "não" : "?";
+  const quad = i.quadras != null ? `<span class="pill">${i.quadras} quadras da Yoshi e Maria</span>` : "";
+  const r = D.meta.ref;
+  const mapa = i.lat ? `https://www.google.com/maps/search/?api=1&query=${i.lat},${i.lon}` : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(i.endereco + ", " + i.bairro + ", Porto Alegre")}`;
+  const rota = i.lat ? `https://www.google.com/maps/dir/?api=1&origin=${i.lat},${i.lon}&destination=${r.lat},${r.lon}&travelmode=walking` : mapa;
+  const tagsB = i.destaques.filter(t => !/quadras|quartos/.test(t)).map(t => `<span class="tag bom">${esc(t)}</span>`).join("");
+  const tagsA = i.alertas.filter(t => !/estoura/.test(t)).map(t => `<span class="tag atn">${esc(t)}</span>`).join("");
+  return `<article class="ficha" id="${i.id}">
+    <div class="foto-box"><div class="fotos" tabindex="0" aria-label="Fotos">${fotos}</div>
+      <span class="badge">nota ${i.nota}</span>${i.fotos.length > 1 ? `<span class="badge qtd">${i.fotos.length} fotos ›</span>` : ""}</div>
+    <div class="corpo">
+      <div class="linha1"><div style="min-width:0"><h2 class="bairro">${esc(i.bairro)}</h2><p class="end">${esc(i.endereco || i.titulo)}</p></div>${quad}</div>
+      <div class="preco"><span class="total">${brl(i.total)}</span><span class="det">aluguel ${brl(i.aluguel)} · ${cond}<br>${st}</span></div>
+      <div class="specs"><div><b>${i.area ? Math.round(i.area) : "—"}</b><span>m²</span></div><div><b>${i.quartos ?? "—"}</b><span>quartos</span></div><div><b>${i.vagas ?? "—"}</b><span>vagas</span></div><div><b>${pet}</b><span>pet</span></div></div>
+      ${tagsB || tagsA ? `<div class="tags">${tagsB}${tagsA}</div>` : ""}
+      <div class="acoes"><a class="btn pri" href="${esc(i.url)}" target="_blank" rel="noopener">Abrir no ${fonteNome[i.fonte] || i.fonte}</a>
+        <a class="btn" href="${mapa}" target="_blank" rel="noopener">Mapa</a>
+        <a class="btn" href="${rota}" target="_blank" rel="noopener">A pé até a Yoshi e Maria</a></div>
+    </div></article>`;
+}
+function filtrados(){
+  let v = D.itens.slice();
+  if (filtro === "petro") v = v.filter(isPetro);
+  if (filtro === "q3") v = v.filter(i => (i.quartos || 0) >= 3);
+  if (filtro === "pet") v = v.filter(i => i.pet === true);
+  if (filtro === "teto") v = v.filter(i => i.total != null && i.total <= D.meta.teto);
+  const key = {nota: i => -i.nota, perto: i => i.quadras ?? 1e9, preco: i => i.total ?? 1e9}[ordem];
+  return v.sort((a, b) => key(a) - key(b));
+}
+function marcaChips(){ document.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.f === filtro))); }
+function render(){
+  const v = filtrados();
+  $("#lista").innerHTML = v.length ? v.map(ficha).join("") : `<p class="vazio">Nenhum imóvel com esse filtro.</p>`;
+  desenhaMapa(v);
+}
+document.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => { filtro = c.dataset.f; marcaChips(); render(); }));
+$("#ordem").addEventListener("change", e => { ordem = e.target.value; try { localStorage.setItem("ordem", ordem); } catch (err) {} render(); });
+
+const it = D.itens, dentro = it.filter(i => i.total != null && i.total <= D.meta.teto).length;
+const fontes = [...new Set(it.map(i => fonteNome[i.fonte] || i.fonte))].join(", ");
+$("#resumo").innerHTML = `<span><b>${it.length}</b> imóveis</span><span><b>${dentro}</b> até ${brl(D.meta.teto)}</span><span><b>${it.length - dentro}</b> até ${brl(D.meta.teto_flex)}</span><span><b>${it.filter(isPetro).length}</b> em Petrópolis</span><span>atualizado em <b>${D.meta.data}</b></span>`;
+$("#rodape").textContent = `Fontes: ${fontes}. ZAP, VivaReal, OLX e Imovelweb bloqueiam buscas automáticas e ficaram de fora. Valor = aluguel + condomínio; no QuintoAndar o condomínio já vem somado ao IPTU. "Pet ?" quer dizer que o anúncio não informa — perguntar. Quadra ≈ ${D.meta.ref.mq} m em linha reta.`;
+const h = location.hash.slice(1);
+render();
+if (h) setTimeout(() => irPara(h), 300);
+</script>
