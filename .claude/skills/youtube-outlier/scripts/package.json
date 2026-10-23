@@ -1,0 +1,20 @@
+{
+  "name": "youtube-outlier-skill",
+  "private": true,
+  "scripts": {
+    "roses": "ts-node index.ts --project=roses-unfiltered",
+    "build": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.60.0",
+    "axios": "^1.13.6",
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.3.1",
+    "googleapis": "^171.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}

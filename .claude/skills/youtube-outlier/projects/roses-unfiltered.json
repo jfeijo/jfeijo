@@ -1,0 +1,23 @@
+{
+  "name": "Roses Unfiltered",
+  "description": "Canal sobre Guns N' Roses e rock clássico (pt-BR).",
+  "driveFolderId": "1nnS2QE8L7gX0QoSzFH0HnVXJMA7tSyAo",
+  "sheetId": "1jrevY_QI7ofhLqiTQlr___yrgcb6f45-x3MsE-bxqP0",
+  "sheetRange": "Sheet1!A1",
+  "relevanceLanguage": "pt",
+  "regionCode": "BR",
+  "daysBack": 30,
+  "niches": [
+    "Guns N' Roses",
+    "Axl Rose",
+    "Slash",
+    "Duff McKagan",
+    "Izzy Stradlin",
+    "Matt Sorum",
+    "Steven Adler",
+    "Velvet Revolver",
+    "AC/DC",
+    "Led Zeppelin",
+    "rock clássico história"
+  ]
+}
